@@ -174,3 +174,32 @@ If you'd like, I can also:
 - Create README badges, quick start script, or minimal tests.
 
 Let me know if you'd like any of these next steps.
+
+---
+
+## Database Models (SQLAlchemy) 🗄️
+
+This project includes SQLAlchemy models designed to hold a multi-tenant inventory of unified communications infrastructure and periodic health snapshots. These are a starting point for integrating a database-backed inventory, health checks, and configuration management.
+
+You can find the models under `app/models/` and the notable ones are:
+
+- `tenant.py` — multi-tenant container for server groups and metadata
+- `cucm_server.py` — CUCM server model with identity, version, AXL connectivity, and health snapshot fields
+- `uc_base.py` — an abstract base for UC servers (shared fields)
+- `expressway_server.py`, `imp_server.py`, `ucce_server.py`, `uccx_server.py`, `unity_connection_server.py` — vendor-specific server models
+- `cube_gateway.py`, `cms_server.py`, `cer_server.py` — gateway and monitoring servers
+
+These models use the PostgreSQL dialect for UUID and INET types and are structured for production usage. If you plan to persist this data, you should add migration tooling (Alembic) and a proper database connection layer.
+
+---
+
+## Development Notes & Next Steps ⚙️
+
+- Add `alembic` configuration and migrations to manage database versions and schema changes.
+- Populate `app/schemas/` with Pydantic models for request/response validation used by the API endpoints.
+- Implement `app/core/axl_loader.py` to mirror `ris_loader.py` and `perfmon_loader.py`, providing `get_axl_client()`.
+- Implement or wire `app/main.py` to create and register the FastAPI app and routers — a starter `main.py` snippet is included earlier in this README.
+- Populate `app/wsdl/`, `app/*/schema/` with the required WSDLs for the AXL, RIS, and PerfMon clients or document how to provide custom paths using environment variables.
+- Add example `.env.example` for local development values.
+
+If you'd like, I can implement one or more of these items now — tell me which and I'll proceed.
