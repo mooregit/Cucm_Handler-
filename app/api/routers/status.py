@@ -14,17 +14,17 @@ from app.axl.axl_client import AXLClient
 from app.ris.ris_client import RISClient
 from app.perfmon.perfmon_client import PerfmonClient
 
-from app.axl.axl_service import (
+from app.services.axl_service import (
     get_system_summary,
     get_process_nodes,
 )
-from app.ris.ris_service import (
+from app.services.ris_service import (
     get_registered_phones,
     get_registered_trunks,
     count_registered_devices,
     get_trunk_status_summary,
 )
-from app.perfmon.perfmon_service import (
+from app.services.perfmon_service import (
     get_cluster_health_summary,
 )
 

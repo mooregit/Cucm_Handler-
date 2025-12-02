@@ -9,7 +9,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, Field
 
 from app.axl.axl_client import AXLClient
-from app.core.axl_loader import get_axl_client
+from app.services.axl_loader import get_axl_client
 
 router = APIRouter(tags=["AXL (raw)"])
 

@@ -430,3 +430,126 @@ def run_sql_update(axl: AXLClient, sql: str) -> Dict[str, Any]:
     Wrapper for executeSQLUpdate.
     """
     return axl.executeSQLUpdate(sql=sql)
+
+# ---------------------------------------------------------------------------
+# AXLService class wrapper (expected by FastAPI dependencies)
+# ---------------------------------------------------------------------------
+
+class AXLService:
+    """
+    High-level wrapper exposing all AXL operations as methods.
+    FastAPI expects this when using `Depends(get_axl_service)`.
+    """
+
+    def __init__(self, client: AXLClient):
+        self.client = client
+
+    # -------------------------
+    # USER OPERATIONS
+    # -------------------------
+
+    def get_user(self, userid: str):
+        return get_user(self.client, userid)
+
+    def list_users(self, userid_pattern: str = "%"):
+        return list_users(self.client, userid_pattern)
+
+    def count_users(self):
+        return count_users(self.client)
+
+    def create_user(self, data: UserCreate):
+        return create_user(self.client, data)
+
+    def update_user(self, userid: str, data: UserUpdate):
+        return update_user(self.client, userid, data)
+
+    def delete_user(self, userid: str):
+        return delete_user(self.client, userid)
+
+    # -------------------------
+    # PHONE / DEVICE
+    # -------------------------
+
+    def get_phone(self, name: str):
+        return get_phone(self.client, name)
+
+    def list_phones(self, name_pattern: str = "%"):
+        return list_phones(self.client, name_pattern)
+
+    def count_devices(self):
+        return count_devices(self.client)
+
+    def create_phone(self, data: PhoneCreate):
+        return create_phone(self.client, data)
+
+    def update_phone(self, name: str, fields: Dict[str, Any]):
+        return update_phone(self.client, name, fields)
+
+    def delete_phone(self, name: str):
+        return delete_phone(self.client, name)
+
+    # -------------------------
+    # LINES
+    # -------------------------
+
+    def get_line(self, pattern: str, partition: Optional[str]):
+        return get_line(self.client, pattern, partition)
+
+    def create_line(self, data: LineCreate):
+        return create_line(self.client, data)
+
+    def delete_line(self, pattern: str, partition: Optional[str]):
+        return delete_line(self.client, pattern, partition)
+
+    # -------------------------
+    # SIP TRUNKS
+    # -------------------------
+
+    def list_sip_trunks(self, name_pattern: str = "%"):
+        return list_sip_trunks(self.client, name_pattern)
+
+    def count_sip_trunks(self):
+        return count_sip_trunks(self.client)
+
+    def get_sip_trunk(self, name: str):
+        return get_sip_trunk(self.client, name)
+
+    def get_sip_trunk_config_summary(self, name_pattern: str = "%"):
+        return get_sip_trunk_config_summary(self.client, name_pattern)
+
+    # -------------------------
+    # SYSTEM / CLUSTER STATUS
+    # -------------------------
+
+    def get_cluster_version(self):
+        return get_cluster_version(self.client)
+
+    def get_process_nodes(self):
+        return get_process_nodes(self.client)
+
+    def get_system_summary(self):
+        return get_system_summary(self.client)
+
+    # -------------------------
+    # RAW SQL
+    # -------------------------
+
+    def run_sql_query(self, sql: str):
+        return run_sql_query(self.client, sql)
+
+    def run_sql_update(self, sql: str):
+        return run_sql_update(self.client, sql)
+
+
+# ---------------------------------------------------------------------------
+# FastAPI dependency
+# ---------------------------------------------------------------------------
+
+from app.services.axl_loader import get_axl_client
+
+def get_axl_service() -> AXLService:
+    """
+    FastAPI dependency that returns an initialized AXLService.
+    """
+    client = get_axl_client()
+    return AXLService(client)
